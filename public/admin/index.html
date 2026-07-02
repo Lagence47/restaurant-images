@@ -237,18 +237,28 @@
         formData.append('file', file);
         formData.append('category_id', categoryId);
 
-        const res = await fetch(`${API}/images`, {
-          method: 'POST',
-          body: formData
-        });
+        try {
+          const res = await fetch(`${API}/images`, {
+            method: 'POST',
+            body: formData
+          });
 
-        if (res.ok) {
+          if (!res.ok) {
+            const text = await res.text();
+            console.error('Erreur upload:', res.status, text);
+            showAlert(`Erreur ${res.status}: ${text.substring(0, 100)}`, 'danger');
+            continue;
+          }
+
           const data = await res.json();
           if (data.message === 'Image already exists (same content)') {
             console.log('Doublon ignoré:', file.name);
           } else {
             uploaded++;
           }
+        } catch (err) {
+          console.error('Erreur:', err);
+          showAlert('Erreur réseau: ' + err.message, 'danger');
         }
       }
 
