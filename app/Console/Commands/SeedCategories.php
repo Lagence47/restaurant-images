@@ -2,29 +2,39 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Category;
 use Illuminate\Console\Command;
 
 class SeedCategories extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:seed-categories';
+    protected $signature = 'categories:seed';
+    protected $description = 'Créer les catégories par défaut du restaurant';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): int
     {
-        //
+        $categories = [
+            '⭐ Populaires',
+            '🆕 Nouveautés',
+            '🍽️ Menus',
+            '🥗 Entrées',
+            '🍛 Plats',
+            '🍔 Burgers & Sandwichs',
+            '🍕 Pizzas',
+            '🍗 Grillades',
+            '🍟 Accompagnements',
+            '🍰 Desserts',
+            '🥤 Boissons',
+            '🎁 Promotions',
+        ];
+
+        $created = 0;
+        foreach ($categories as $name) {
+            if (Category::firstOrCreate(['name' => $name])->wasRecentlyCreated) {
+                $created++;
+            }
+        }
+
+        $this->info("✅ {$created} catégorie(s) créée(s), " . count($categories) . " total");
+        return 0;
     }
 }
