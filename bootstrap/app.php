@@ -11,6 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->shouldRenderJsonWhen(function ($request) {
+            return $request->is('api/*') || $request->expectsJson();
+        });
+    })
     ->withMiddleware(function (Middleware $middleware) {
         //
     })
