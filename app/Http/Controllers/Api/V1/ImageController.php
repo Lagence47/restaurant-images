@@ -28,7 +28,7 @@ class ImageController extends Controller
     {
         $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
-            'file'        => ['required', 'file', 'mimes:jpg,jpeg,png,webp,gif', 'max:10240'],
+            'file'        => ['required', 'file', 'mimes:jpg,jpeg,png,webp,gif', 'max:51200'],
         ]);
 
         $file = $request->file('file');
